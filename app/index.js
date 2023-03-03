@@ -17,8 +17,9 @@ module.exports = class Application {
 
         this.setupExpress()  
         this.setConfig()
-
-        }
+        this.setMongoose()
+        this.setRouters()
+    }
 
         setupExpress() {
 
@@ -26,10 +27,13 @@ module.exports = class Application {
 
             server.listen(4000, ()=> console.log('Server is running on Port 4000'))
         }
-
-        setConfig(){
+        setMongoose(){
+            mongoose.Promise = global.Promise
             mongoose.connect('mongodb://127.0.0.1:27017/NJS-Khodam').then(() => console.log('Connected!'))
             mongoose.set('strictQuery', false)
+        }
+        setConfig(){
+            
 
             app.use(express.static(__dirname + '/public'))
             app.set('view engine', 'ejs')
@@ -49,12 +53,12 @@ module.exports = class Application {
               }))
             app.use(flash()) 
 
+            
 
+    }
 
-            app.get('/', (req,res)=>{
-                res.json('Hello Rocket')
-            })
-
-
+        setRouters(){
+            app.use(require('./routes/web/index'))
+            app.use(require('./routes/api/index'))
         }
 }
