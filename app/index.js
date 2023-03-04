@@ -34,7 +34,7 @@ module.exports = class Application {
         }
         setConfig(){
             
-
+            
             app.use(express.static(__dirname + '/public'))
             app.set('view engine', 'ejs')
             app.set('views', path.resolve('./resource/views'))
@@ -56,7 +56,6 @@ module.exports = class Application {
             
 
     }
-
         setRouters(){
             app.use(require('./routes/web/index'))
             app.use(require('./routes/api/index'))

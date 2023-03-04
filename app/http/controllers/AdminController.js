@@ -1,5 +1,6 @@
+const Controller = require('./Controller')
 
-class adminController {
+class adminController extends Controller {
     index(req,res){
         res.json('Admin is here')
     }
