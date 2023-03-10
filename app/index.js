@@ -42,17 +42,23 @@ module.exports = class Application {
             app.use(bodyParser.json())
             app.use(bodyParser.urlencoded({extended : true}))
             
+            
             app.use(cookieParser('hbdakq2eq2q5546535qopkosqnwx9849'))
             app.use(session({
                 secret: 'mysecrettkkey',
                 resave: true,
                 saveUninitialized: true,
-                cookie : {expires : new Date(Date.now() + (1000 * 3600 * 24 * 100)) ,
+               cookie : {expires : new Date(Date.now() + (1000 * 3600 * 24 * 100)) ,
                           store   : MongoStore.create({ mongoUrl: 'mongodb://127.0.0.1:27017/Rocket' })
                         }
               }))
             app.use(flash()) 
 
+            app.use((req,res,next)=>{
+                res.locals = {errors : req.flash('errors'), req }     ///We access to req in all views
+                next()
+              })
+            
             
 
     }

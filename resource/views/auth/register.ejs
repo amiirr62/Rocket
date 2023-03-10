@@ -1,5 +1,75 @@
+
 <%- include('../header') -%>
 
-<h1>Register Page</h1>
+<div class="container">
+  <div class="row pt-5 justify-content-center">
+    <div class="col-8">
+      <div class="card card-default">
+        <div class="card-header"><h5>Registration</h5></div>
+        <div class="card-body">
 
+          <form class="form-horizontal" method="POST" action="/register">
+            <div class="alert alert-danger alert-dismissible">
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
+              >
+                <span>x</span>
+              </button>
+         <!--     Name is required!<br />
+              Minimum Name lenght is 5 Character!<br />
+              Email is required!<br />
+              Email is not valid!<br />
+              Password is required!<br />
+              Minimum Password lenght is 1 Character!<br />  -->
+              <%- include('../components/validationResult') -%>
+
+            <div class="form-group">
+              <label for="name" class="control-label">Full Name</label>
+              <input
+                id="name"
+                type="text"
+                class="form-control"
+                name="name"
+                value=""
+                required
+                autofocus=""
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="email" class="control-label">Email </label>
+              <input
+                id="email"
+                type="email"
+                class="form-control"
+                name="email"
+                value=""
+                required=""
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="password" class="control-label">Password</label>
+              <input
+                id="password"
+                type="password"
+                class="form-control"
+                name="password"
+                required=""
+              />
+            </div>
+
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary">SignUp</button>
+              <!-- <a href="/login/google" class="btn btn-danger">Google Account SignUp</a> -->
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <%- include('../footer') -%>
