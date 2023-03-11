@@ -2,11 +2,11 @@
 <div>
   <ul>
     <% errors.forEach(err => { %>
-    <center>
-      <div class="alert alert-danger alert-dismissible">
-        <li><%= err.msg %></li>
-      </div>
-    </center>
+
+    <div class="alert alert-danger alert-dismissible">
+      <li><%= err.msg || errors %></li>
+    </div>
+
     <% }) %>
   </ul>
 </div>
