@@ -54,7 +54,9 @@ class authController extends Controller  {
 //************************** End OF Recaptcha Result Process ************************ */
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-        let myErrors = (errors.array())
+        let myErrors = (errors.array().map(err => err.msg))
+
+       
         req.flash('errors', myErrors)
         
         return res.redirect('/register')
