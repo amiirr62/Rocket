@@ -1,10 +1,12 @@
+
+
 <% if(errors.length){ %>
 <div>
   <ul>
     <% errors.forEach(err => { %>
 
     <div class="alert alert-danger alert-dismissible">
-      <li><%= errors %></li>
+      <li><%= err.msg || errors %></li>
     </div>
 
     <% }) %>

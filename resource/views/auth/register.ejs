@@ -2,41 +2,28 @@
 <%- include('../header') -%>
 
 <div class="container">
-  <div class="row pt-5 justify-content-center">
+  <div class="row pt-3 justify-content-center">
     <div class="col-8">
       <div class="card card-default">
-        <div class="card-header"><h5>Registration</h5></div>
+        <div class="card-header" style="background-color:rgb(40, 152, 20) ; color: white;""><h5>Registration</h5></div>
         <div class="card-body">
 
-          <form class="form-horizontal" method="POST" action="/register">
-            <div class="alert alert-danger alert-dismissible">
+          <form class="form-horizontal" role="form" method="POST" action="/register" novalidate>
+            <div class="alert alert-danger alert-dismissible" style="background-color: white; border: 0;">
               <button
                 type="button"
                 class="close"
                 data-dismiss="alert"
                 aria-label="Close"
               >
-                <span>x</span>
+              
               </button>
-         <!--     Name is required!<br />
-              Minimum Name lenght is 5 Character!<br />
-              Email is required!<br />
-              Email is not valid!<br />
-              Password is required!<br />
-              Minimum Password lenght is 1 Character!<br />  -->
+         
               <%- include('../components/validationResult') -%>
 
             <div class="form-group">
               <label for="name" class="control-label">Full Name</label>
-              <input
-                id="name"
-                type="text"
-                class="form-control"
-                name="name"
-                value=""
-                required
-                autofocus=""
-              />
+              <input id="name" type="text" class="form-control" name="name" value="" required  autofocus=""/>
             </div>
 
             <div class="form-group">
@@ -65,7 +52,7 @@
               <%- recaptcha %>
             </div>
             <div class="form-group">
-              <button type="submit" class="btn btn-primary">SignUp</button>
+              <button class="btn btn-outline-success btn-small" type="submit" class="btn btn-primary">Register</button>
               <!-- <a href="/login/google" class="btn btn-danger">Google Account SignUp</a> -->
             </div>
           </form>

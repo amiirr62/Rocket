@@ -49,19 +49,26 @@
             </li>
           </ul>
           <ul class="nav navbar-nav">
+            <% if(auth.check){ %>
             <li>
-              <a class="btn btn-outline-success btn-small" href="register"
-                >Register
-              </a>
+              <a class="btn btn-info" btn-small" href="/dashboard">Dashboard</a
+              >
+            </li>
+            <li>
+              <a class="btn btn-danger btn-small" href="/logout">Logout <%= auth.user.name%></a
+              >
+            </li>
+            <% }else{ %>
+            <li>
+              <a class="btn btn-outline-success btn-small" href="/register">Register</a
+              >
             </li>
             <li>
               <a
-                class="btn btn-outline-primary btn-small ml-2 mr-2"
-                href="login"
+                class="btn btn-outline-primary btn-small ml-2 mr-2" href="login" >LogIn</a
               >
-                LogIn
-              </a>
             </li>
+            <% } %>
           </ul>
           <form class="d-flex" role="search">
             <input

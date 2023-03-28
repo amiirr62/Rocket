@@ -10,6 +10,11 @@ const mongoose = require('mongoose')
 const { body, validationResult } = require('express-validator')
 const flash = require('connect-flash')
 const passport = require('passport')
+const Helpers = require('./helpers')
+const rememberLogin = require('./http/middlewares/rememberLogin')
+const { handle } = require('./http/middlewares/rememberLogin')
+
+//const uniqueString  = require('unique-string')
 
 
 module.exports = class Application {
@@ -25,37 +30,38 @@ module.exports = class Application {
 
             const server = http.createServer(app)
 
-            server.listen(4000, ()=> console.log('Server is running on Port 4000'))
+            server.listen(config.port, ()=> console.log(`Server is running on Port ${config.port}`))
         }
         setMongoose(){
             mongoose.Promise = global.Promise
-            mongoose.connect('mongodb://127.0.0.1:27017/NJS-Khodam').then(() => console.log('Connected!'))
+            mongoose.connect(config.database.url).then(() => console.log(`Connected over port ${config.port}`))
             mongoose.set('strictQuery', false)
+           
         }
         setConfig(){
             
             
-            app.use(express.static(__dirname + '/public'))
-            app.set('view engine', 'ejs')
-            app.set('views', path.resolve('./resource/views'))
+            app.use(express.static(__dirname + config.layout.public_dir))
+            app.set('view engine', config.layout.view_engine)
+            app.set('views', config.layout.view_dir)
 
             app.use(bodyParser.json())
             app.use(bodyParser.urlencoded({extended : true}))
             
             
-            app.use(cookieParser('hbdakq2eq2q5546535qopkosqnwx9849'))
-            app.use(session({
-                secret: 'mysecrettkkey',
-                resave: true,
-                saveUninitialized: true,
-               cookie : {expires : new Date(Date.now() + (1000 * 3600 * 24 * 100)) ,
-                          store   : MongoStore.create({ mongoUrl: 'mongodb://127.0.0.1:27017/Rocket' })
-                        }
-              }))
+            app.use(cookieParser(config.cookie_secretkey))
+            app.use(session({...config.session}))
             app.use(flash()) 
+            
+            require('./passport/passport-local')
+            app.use(passport.initialize())
+            app.use(passport.session())
 
-            app.use((req,res,next)=>{
-                res.locals = {errors : req.flash('errors'), req }     ///We access to req in all views
+            app.use(rememberLogin.handle)
+
+            app.use((req,res,next)=>{       ///We access to req in all views
+                res.locals = {errors : req.flash('errors'), req }
+                app.locals = new Helpers(req,res).getObjects()
                 next()
               })
             

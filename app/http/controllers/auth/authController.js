@@ -1,12 +1,13 @@
 const express = require('express')
 const { body, validationResult } = require('express-validator')
 const Controller = require('../Controller')
-
+const User = require('../../../models/users')
+const passport = require('passport')
 const Recaptcha = require('express-recaptcha').RecaptchaV2
 
-var options = { hl: 'en' }
-var recaptcha = new Recaptcha('6LcIXvIkAAAAAA26fU0fC9KSEkwhJjcCk5XhcDcd', 
-                              '6LcIXvIkAAAAAP05uPm9nFyJhzHfrOf9n0hl2kcK', options)
+//var options = { hl: 'en' }
+var recaptcha = new Recaptcha(config.service.recaptcha.site_key, 
+                              config.service.recaptcha.secret_key, {...config.service.recaptcha.options})
 
 
 
@@ -31,49 +32,86 @@ class authController extends Controller  {
         }
     }
     
-
-    async  registerProcess(req,res,next){
-       try{
-//************************** Recaptcha Result Process ************************ */
-        let recaptchaResult =  await new Promise((resolve,reject)=>{
-            recaptcha.verify(req,(err,data)=>{
-                if(err){
-                    req.flash('errors','Checkmark Recaptcha plz !!!')
-                    res.redirect(req.url)
-                    resolve(false)
-                }else{
-                    resolve(true)
-                }
-
+    async register(req,res,next){ 
+        try {
+            let recaptchaResult = await new Promise((resolve,reject)=>{
+                recaptcha.verify(req,(err,data)=>{
+                    if(err){
+                        req.flash('errors','Recaptcha needs to be marked!  ')
+                        res.redirect('/register')
+                        resolve(false)
+                    }else{
+                        resolve(true)
+                    }
+                })
             })
-        })
+            
+            if(!recaptchaResult){
+                return
+            }
+                
+                const errors = validationResult(req)
+                if (!errors.isEmpty()) {
+                    let myErrors = errors.array()
+                    req.flash('errors', myErrors)
+                    return res.redirect('/register' )
+                }
+            
+        passport.authenticate('local.register',{
+            successRedirect : '/login',
+            failureRedirect : '/register',
+            failureFlash : true
 
-        if(!recaptchaResult){
-            return 
+          })(req,res,next)
+              
+        
+        } catch (err) {
+            next(err)
         }
-//************************** End OF Recaptcha Result Process ************************ */
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-        let myErrors = (errors.array().map(err => err.msg))
+    }
 
-       
-        req.flash('errors', myErrors)
+    async login(req,res,next){
+        try {
+            let recaptchaResult = await new Promise((resolve,reject)=>{
+                recaptcha.verify(req,(err,data)=>{
+                    if(err){
+                        req.flash('errors','Recaptcha needs to be marked!  ')
+                        res.redirect('/login')
+                        resolve(false)
+                    }else{
+                        resolve(true)
+                    }
+                })
+            })
+            
+            if(!recaptchaResult){
+                return
+            }
+
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                let myErrors = errors.array()
+                req.flash('errors', myErrors)
+                return res.redirect('/login' )
+            }
+            
+            passport.authenticate('local.login', (err,user)=>{
+                if(!user) return res.redirect('/login')
+
+            req.logIn(user, err=>{
+                if(req.body.remember){
+                    user.setRememberToken(res)
+                }
+            return res.redirect('/dashboard')
+            })
+        })(req,res,next)
+            
         
-        return res.redirect('/register')
-
-       }
-    }catch (err) {
-        next(err)
-}
-
-
-        
-    return res.redirect('/login')
-
-    
+        } catch (err) {
+            next(err)
+        }
+    }
    
 }
-}
-
 
 module.exports = new authController

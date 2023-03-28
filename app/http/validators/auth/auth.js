@@ -13,7 +13,7 @@ class authValidator {
 
     login(){
         return [body('email','Not a Valid Email!!').isEmail(),
-                body('password','Minimum Password length is 3 character!!').isLength({ min: 3 })]
+                ]
     }
 
 
