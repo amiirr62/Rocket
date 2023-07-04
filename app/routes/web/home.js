@@ -8,8 +8,10 @@ const dashboardController = require ('../../http/controllers/dashboard/dashboard
 
 router.get('/', homeController.index)
 router.get('/course',homeController.course)
+
 router.get('/login',authController.showLoginForm)
 router.post('/login',authValidator.login(),authController.login)
+
 router.get('/register',authController.showRegisterForm)
 router.post('/register',authValidator.register(),authController.register)
 
